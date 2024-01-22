@@ -71,16 +71,12 @@ func CloseExcelFile(f *excelize.File) (string, error) {
 }
 
 // AppendToExcel 追加数据到Excel文件
-func AppendToExcel(companies []spider.CompanyInfo, filePath string) error {
-	f, err := excelize.OpenFile(filePath)
-	if err != nil {
-		return err
-	}
+func AppendToExcel(companies []spider.CompanyInfo, f *excelize.File) (*excelize.File, error) {
 
 	// 获取 Sheet1 的最后一行
 	rows, err := f.GetRows("Sheet1")
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	lastRow := len(rows) + 1
@@ -93,7 +89,30 @@ func AppendToExcel(companies []spider.CompanyInfo, filePath string) error {
 		f.SetCellValue("Sheet1", fmt.Sprintf("C%d", row), info.Product)
 	}
 
-	CloseExcelFile(f)
+	return f, err
+}
 
-	return err
+// CreateExcelFile 创建新的Excel文件
+func CreateExcelFile() (string, error) {
+	f := excelize.NewFile()
+	index, err := f.NewSheet("Sheet1")
+	if err != nil {
+		return "", err
+	}
+
+	f.SetCellValue("Sheet1", "A1", "公司名称")
+	f.SetCellValue("Sheet1", "B1", "对外资产公司名称")
+	f.SetCellValue("Sheet1", "C1", "对外资产公司对应的关联产品名")
+
+	f.SetActiveSheet(index)
+
+	// 使用当前时间作为文件名的一部分
+	timeFormat := time.Now().Format("20060102_150405") // 格式化时间
+	fileName := fmt.Sprintf("result_%s.xlsx", timeFormat)
+
+	err = f.SaveAs(fileName)
+	if err != nil {
+		return "", err
+	}
+	return fileName, nil
 }

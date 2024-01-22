@@ -76,6 +76,11 @@ func SpiderCompanyInfo(companyName string) []ExternalCompanyInfo {
 
 			// 过滤投资比例大于50%且经营状态为存续的公司
 			filteredCompanies := filterCompanies(externalCompanies)
+			//if len(filteredCompanies) == 0 {
+			//	filteredCompanies = append(filteredCompanies, ExternalCompanyInfo{Name: companyName})
+			//}
+
+			//fmt.Println(filteredCompanies)
 
 			return filteredCompanies
 		}
