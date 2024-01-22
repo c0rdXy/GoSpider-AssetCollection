@@ -60,9 +60,11 @@ func FromNameOutputToExcel(companyName string) {
 		companies = append(companies, company)
 	}
 
-	err := file.WriteToExcel(companies)
+	fileName, err := file.WriteToExcel(companies)
 	if err != nil {
 		log.Println("写入Excel文件失败:", err)
+	} else {
+		log.Println("写入Excel文件成功：", fileName)
 	}
 
 }
@@ -81,25 +83,44 @@ func FromExcelOutputToExcel(filePath string) {
 	excelCompanies, err := file.ReadExcel(filePath)
 	if err != nil {
 		log.Println("读取Excel文件失败:", err)
+	} else {
+		log.Println("读取Excel文件成功")
 	}
 
 	var company = spider.CompanyInfo{}
 	var companies []spider.CompanyInfo
+	var fileName string
 
-	for _, excelCompany := range excelCompanies {
+	for i, excelCompany := range excelCompanies {
 
 		spiderCompanies := spider.SpiderCompanyInfo(excelCompany)
+
+		fmt.Println(excelCompany) // test
+
 		for _, info := range spiderCompanies {
 			company.Company = excelCompany
 			company.Source = info.Name
 			company.Product = info.ProductName
 			companies = append(companies, company)
+
 		}
 
-		err := file.WriteToExcel(companies)
-		if err != nil {
-			log.Println("写入Excel文件失败:", err)
+		if i == 0 {
+			fileName, err = file.WriteToExcel(companies)
+			if err != nil {
+				log.Println("写入Excel文件失败:", err)
+			} else {
+				log.Println("写入Excel文件成功")
+			}
+		} else {
+			err := file.AppendToExcel(companies, fileName)
+			if err != nil {
+				log.Println("追加数据到Excel文件失败:", err)
+			} else {
+				log.Println("追加数据到Excel文件成功")
+			}
 		}
+
 	}
 
 }
@@ -113,6 +134,8 @@ func FromExcelOutputToMysql(filePath string) {
 	excelCompany, err := file.ReadExcel(filePath)
 	if err != nil {
 		log.Println("读取Excel文件失败:", err)
+	} else {
+		log.Println("读取Excel文件成功")
 	}
 
 	for _, companyName := range excelCompany {
@@ -137,6 +160,8 @@ func FromExcelOutputToTerminal(filePath string) {
 	excelCompany, err := file.ReadExcel(filePath)
 	if err != nil {
 		log.Println("读取Excel文件失败:", err)
+	} else {
+		log.Println("读取Excel文件成功")
 	}
 
 	for _, companyName := range excelCompany {
