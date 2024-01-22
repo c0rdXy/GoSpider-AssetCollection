@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+// ReadExcel 读取Excel文件
 func ReadExcel(filePath string) ([]string, error) {
 	var companies []string
 
@@ -24,6 +25,7 @@ func ReadExcel(filePath string) ([]string, error) {
 	return companies, nil
 }
 
+// WriteToExcel 写入Excel文件
 func WriteToExcel(companies []spider.CompanyInfo) error {
 	f := excelize.NewFile()
 	index := f.NewSheet("Sheet1")
@@ -32,14 +34,14 @@ func WriteToExcel(companies []spider.CompanyInfo) error {
 	f.SetCellValue("Sheet1", "B1", "对外资产公司名称")
 	f.SetCellValue("Sheet1", "C1", "对外资产公司对应的关联产品名")
 
+	f.SetActiveSheet(index)
+
 	for i, info := range companies {
 		row := i + 2
 		f.SetCellValue("Sheet1", fmt.Sprintf("A%d", row), info.Company)
 		f.SetCellValue("Sheet1", fmt.Sprintf("B%d", row), info.Source)
 		f.SetCellValue("Sheet1", fmt.Sprintf("C%d", row), info.Product)
 	}
-
-	f.SetActiveSheet(index)
 
 	// 使用当前时间作为文件名的一部分
 	timeFormat := time.Now().Format("20060102_150405") // 格式化时间

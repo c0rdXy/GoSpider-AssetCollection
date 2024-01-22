@@ -68,6 +68,7 @@ func MyHTTPPost(url string, payload interface{}) ([]byte, error) {
 	return body, nil
 }
 
+// checkGzip 检查是否有 gzip 压缩
 func checkGzip(res *http.Response) ([]byte, error) {
 	// 是否有 gzip
 	gzipFlag := false

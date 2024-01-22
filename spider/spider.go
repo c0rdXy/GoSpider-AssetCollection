@@ -9,6 +9,7 @@ import (
 	"strings"
 )
 
+// CompanyInfo 结构体定义
 type CompanyInfo struct {
 	Company string
 	Source  string
@@ -52,6 +53,7 @@ type ExternalCompanyInfo struct {
 	// 其他字段...
 }
 
+// SpiderCompanyInfo 爬取公司信息
 func SpiderCompanyInfo(companyName string) []ExternalCompanyInfo {
 	// 发送 POST 请求获取公司列表
 	companyList, err := searchCompanyList(companyName)
@@ -82,6 +84,7 @@ func SpiderCompanyInfo(companyName string) []ExternalCompanyInfo {
 	return nil
 }
 
+// searchCompanyList 发送 POST 请求获取公司列表
 func searchCompanyList(companyName string) ([]CompanyListInfo, error) {
 	url := "https://capi.tianyancha.com/cloud-tempest/search/suggest/v3"
 	payload := map[string]string{"keyword": companyName}
@@ -104,6 +107,7 @@ func searchCompanyList(companyName string) ([]CompanyListInfo, error) {
 	return response.Data, nil
 }
 
+// getExternalCompanies 获取对外资产公司列表
 func getExternalCompanies(companyID int64) ([]ExternalCompanyInfo, error) {
 	url := "https://capi.tianyancha.com/cloud-company-background/company/investListV2"
 	payload := map[string]interface{}{
@@ -132,6 +136,7 @@ func getExternalCompanies(companyID int64) ([]ExternalCompanyInfo, error) {
 	return response.Data.Result, nil
 }
 
+// filterCompanies 过滤投资比例大于50%且经营状态为存续的公司
 func filterCompanies(companies []ExternalCompanyInfo) []ExternalCompanyInfo {
 	var filteredCompanies []ExternalCompanyInfo
 	for _, c := range companies {
