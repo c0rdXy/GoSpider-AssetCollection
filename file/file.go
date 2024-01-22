@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/c0rdXy/GoSpider-AssetCollection/spider"
+	"time"
 )
 
 func ReadExcel(filePath string) ([]string, error) {
@@ -40,6 +41,11 @@ func WriteToExcel(companies []spider.CompanyInfo) error {
 
 	f.SetActiveSheet(index)
 
-	err := f.SaveAs("result.xlsx")
+	// 使用当前时间作为文件名的一部分
+	timeFormat := time.Now().Format("20060102_150405") // 格式化时间
+	fileName := fmt.Sprintf("result_%s.xlsx", timeFormat)
+
+	err := f.SaveAs(fileName)
+
 	return err
 }
