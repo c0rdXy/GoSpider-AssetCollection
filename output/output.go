@@ -22,7 +22,8 @@ func GoSpiderInit() {
 	fmt.Println(text)
 
 	fmt.Println("GoSpider - 一个简单的Go语言爬虫工具")
-	fmt.Println("作者: xxx")
+	fmt.Println("作者: xxx	版本: 1.0.1")
+	fmt.Println()
 }
 
 // FromNameOutputToMysql 从公司名称输出到MySQL数据库
